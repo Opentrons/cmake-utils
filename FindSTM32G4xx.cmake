@@ -85,7 +85,7 @@ include(FetchContent)
 FetchContent_Declare(
         STM32_G491RE_BSP_SOURCE
         GIT_REPOSITORY "https://github.com/STMicroelectronics/STM32CubeG4"
-        GIT_TAG "v1.11.2"
+        GIT_TAG "v1.4.0"
         GIT_SHALLOW
         PREFIX ${CMAKE_SOURCE_DIR}/stm32-tools/
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/stm32-tools/stm32g4xx-bsp
@@ -99,8 +99,8 @@ FetchContent_GetProperties(STM32_G491RE_BSP_SOURCE
 
 set(STM32G4xx_BSP_FOUND ${bsp_populated} PARENT_SCOPE)
 set(STM32G4xx_BSP_DIRECTORY ${bsp_source} PARENT_SCOPE)
-set(STM32G4xx_BSP_VERSION "1.11.2" PARENT_SCOPE)
-set(STM32G4xx_BSP_VERSION_STRING "1.11.2" PARENT_SCOPE)
+set(STM32G4xx_BSP_VERSION "1.4.0" PARENT_SCOPE)
+set(STM32G4xx_BSP_VERSION_STRING "1.4.0" PARENT_SCOPE)
 
 file(GLOB_RECURSE hal_driver_sources ${bsp_source}/Drivers/STM32G4xx_HAL_Driver/Src/*.c)
 add_library(
