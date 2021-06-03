@@ -103,6 +103,15 @@ set(STM32G4xx_BSP_VERSION "1.4.0" PARENT_SCOPE)
 set(STM32G4xx_BSP_VERSION_STRING "1.4.0" PARENT_SCOPE)
 
 file(GLOB_RECURSE hal_driver_sources ${bsp_source}/Drivers/STM32G4xx_HAL_Driver/Src/*.c)
+# GLOB_RECURSE lists files in alphabetical order. That means that the hal, which is
+# structured so that each subsystem has stm32g4xx_hal_subsystem.c and
+# stm32g4xx_hal_subsystem_ex.c, will have subsystem.c packed into the archive
+# before hal_subsystem_ex.c. That breaks some of the hal code, which has weak definitions
+# of some functions in subsystem.c that should be overridden in subsystem_ex.c, but
+# if subsystem.c comes before subsystem_ex.c in the archive, the linker will pick
+# the weak one. By reversing the order, we make subsystem_ex come befeore subsystem,
+# and the correct function gets picked.
+list(REVERSE hal_driver_sources)
 add_library(
         STM32G4xx_Drivers STATIC
         ${hal_driver_sources})
