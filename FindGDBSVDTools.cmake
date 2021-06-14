@@ -37,7 +37,7 @@ FetchContent_GetProperties(GDBSVDTools_repo
 FetchContent_Declare(
   CMSIS_SVD
   GIT_REPOSITORY "https://github.com/posborne/cmsis-svd"
-  GIT_TAG master
+  GIT_TAG 207675b6d22fa2fd733b87a9fb068dcf97d85f99
   GIT_SHALLOW
   PREFIX ${GDBSVDTools_DIRECTORY}/cmsis-svd
   SOURCE_DIR ${GDBSVDTools_DIRECTORY}/cmsis-svd/cmsis-svd
