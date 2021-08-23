@@ -80,6 +80,14 @@ if (Clang_CODECHECKER_EXECUTABLE STREQUAL "Clang_CODECHECKER_EXECUTABLE_NOTFOUND
   message(WARNING "Could not find codechecker, which is system-dependent. See https://codechecker.readthedocs.io/en/latest/#install-guide")
 endif()
 
+# Need to add symlink to executable because command `clang` does not exist
+if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+  execute_process(
+    WORKING_DIRECTORY /usr/bin
+    COMMAND ln -s ${Clang_EXECUTABLE} clang
+  )
+endif()
+
 if(NOT Clang_EXECUTABLE STREQUAL "Clang_EXECUTABLE-NOTFOUND")
   execute_process(
     COMMAND clang --version
