@@ -20,13 +20,16 @@ set(CMAKE_C_COMPILER "${CrossGCC_BINDIR}/${CrossGCC_TRIPLE}-gcc")
 set(CMAKE_ASM_COMPILER "${CrossGCC_BINDIR}/${CrossGCC_TRIPLE}-gcc")
 set(CMAKE_CXX_COMPILER "${CrossGCC_BINDIR}/${CrossGCC_TRIPLE}-g++")
 
-set(GCC_CROSS_BASE_FLAGS
-  "-mthumb -mcpu=cortex-m4 -mfloat-abi=hard -specs=nosys.specs -specs=nano.specs -fpic -ffunction-sections -fdata-sections -fno-lto")
-set(CMAKE_C_COMPILER_TARGET thumbv7m-unknown-none-eabi)
-set(CMAKE_CXX_COMPILER_TARGET thumbv7m-unknown-none-eabi)
-set(CMAKE_C_FLAGS ${GCC_CROSS_BASE_FLAGS})
-set(CMAKE_CXX_FLAGS ${GCC_CROSS_BASE_FLAGS})
-set(CMAKE_ASM_FLAGS ${GCC_CROSS_BASE_FLAGS})
+macro(specify_gcc_arch target arch compile_target)
+    set(GCC_CROSS_BASE_FLAGS
+            "-mthumb -mcpu=${arch} -mfloat-abi=hard -specs=nosys.specs -specs=nano.specs -fpic -ffunction-sections -fdata-sections -fno-lto")
+    set(CMAKE_C_COMPILER_TARGET ${compile_target})
+    set(CMAKE_CXX_COMPILER_TARGET ${compile_target})
+
+    set(CMAKE_C_FLAGS ${GCC_CROSS_BASE_FLAGS})
+    set(CMAKE_CXX_FLAGS ${GCC_CROSS_BASE_FLAGS})
+    set(CMAKE_ASM_FLAGS ${GCC_CROSS_BASE_FLAGS})
+endmacro()
 
 set(CMAKE_CROSSCOMPILING_EMULATOR "${CrossGCC_BINDIR}/${CrossGCC_TRIPLE}-gdb")
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
