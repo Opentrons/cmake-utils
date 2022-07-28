@@ -22,10 +22,12 @@ but other useful tools built on the clang frontend, such as clang-format and Cod
 
 Provides the variables
 - ``Clang_FOUND``: bool, true if found
-- ``Clang_EXECUTABLE``: the path to the clang frontend binary
+- ``Clang_EXECUTABLE``: the path to the clang (c) frontend binary
+- ``ClangXX_EXECUTABLE``: the path to the clang++ (c++) frontend binary
 - ``Clang_CLANGTIDY_EXECUTABLE``: the path to clang-tidy
 - ``Clang_CLANGFORMAT_EXECUTABLE``: the path to clang-format
 - ``Clang_CODECHECKER_EXECUTABLE``: the path to CodeChecker
+- ``Clang_DIRECTORY``: The path to the downloaded clang tree
 
 #]=======================================================================]
 
@@ -49,32 +51,39 @@ FetchContent_Declare(CLANG_LOCALINSTALL
   DOWNLOAD_DIR "${LOCALINSTALL_CLANG_DIR}/${CMAKE_HOST_SYSTEM_NAME}"
   URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${DL_CLANG_VERSION}/clang+llvm-${DL_CLANG_VERSION}-${CLANG_ARCHIVE}")
 
-FetchContent_GetProperties(CLANG_LOCALINSTALL
-  POPULATED CLANG_LOCALINSTALL_POPULATED)
-if(NOT CLANG_LOCALINSTALL_POPULATED)
+FetchContent_GetProperties(CLANG_LOCALINSTALL)
+if(NOT clang_localinstall_POPULATED)
   FetchContent_Populate(CLANG_LOCALINSTALL)
   message(STATUS "Downloaded new clang")
 endif()
 
 find_program(Clang_EXECUTABLE
   clang
-  PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/clang/${CMAKE_HOST_SYSTEM_NAME}
-  PATH_SUFFIXES bin)
+  PATHS ${clang_localinstall_SOURCE_DIR}
+  PATH_SUFFIXES bin
+  NO_DEFAULT_PATH)
+
+find_program(ClangXX_EXECUTABLE
+  clang++
+  PATHS ${clang_localinstall_SOURCE_DIR}
+  PATH_SUFFIXES bin
+  NO_DEFAULT_PATH)
 
 find_program(Clang_CLANGFORMAT_EXECUTABLE
   clang-format
-  PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/clang/${CMAKE_HOST_SYSTEM_NAME}
+  PATHS ${clang_localinstall_SOURCE_DIR}
   PATH_SUFFIXES bin
   NO_DEFAULT_PATH)
 
 find_program(Clang_CLANGTIDY_EXECUTABLE
   clang-tidy
-  PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/clang/${CMAKE_HOST_SYSTEM_NAME}
-  PATH_SUFFIXES bin)
+  PATHS ${clang_localinstall_SOURCE_DIR}
+  PATH_SUFFIXES bin
+  NO_DEFAULT_PATH)
 
 find_program(Clang_CODECHECKER_EXECUTABLE
   CodeChecker
-  PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/clang/${CMAKE_HOST_SYSTEM_NAME})
+  PATHS ${clang_localinstall_SOURCE_DIR})
 
 if (Clang_CODECHECKER_EXECUTABLE STREQUAL "Clang_CODECHECKER_EXECUTABLE_NOTFOUND")
   message(WARNING "Could not find codechecker, which is system-dependent. See https://codechecker.readthedocs.io/en/latest/#install-guide")
@@ -134,6 +143,8 @@ if (${INSTALLED_CLANG_VERSION} VERSION_LESS ${DL_CLANG_VERSION})
     message(STATUS "Found downloaded clang-format: ${Clang_CLANGFORMAT_EXECUTABLE}")
   endif()
 endif()
+
+set(Clang_DIRECTORY ${clang_localinstall_SOURCE_DIR})
 
 message(STATUS "Found clang-tidy at: ${Clang_CLANGTIDY_EXECUTABLE}")
 message(STATUS "Found clang-format at ${Clang_CLANGFORMAT_EXECUTABLE}")

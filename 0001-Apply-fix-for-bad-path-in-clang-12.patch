@@ -1,0 +1,37 @@
+From 99a42933ac1cd839a19781f09d1b12b4bce27778 Mon Sep 17 00:00:00 2001
+From: Seth Foster <seth@opentrons.com>
+Date: Thu, 22 Jul 2021 16:28:24 -0400
+Subject: [PATCH] Apply fix for bad path in clang 12
+
+---
+ CMakeLists.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 923b4d9..e7ccfea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,4 @@
+ cmake_minimum_required(VERSION 3.4.3)
+-
+ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+   message(STATUS "IWYU: out-of-tree configuration")
+   set(IWYU_IN_TREE OFF)
+@@ -17,6 +16,14 @@ if (NOT IWYU_IN_TREE)
+   project(include-what-you-use)
+ 
+   find_package(LLVM CONFIG REQUIRED)
++
++  if (APPLE)
++    if (LLVM_VERSION_MAJOR EQUAL 12)
++      set_target_properties(LLVMSupport PROPERTIES
++        INTERFACE_LINK_LIBRARIES "m;ZLIB::ZLIB;curses;LLVMDemangle")
++    endif()
++  endif()
++
+   find_package(Clang CONFIG REQUIRED)
+ 
+   list(APPEND CMAKE_MODULE_PATH ${LLVM_DIR})
+-- 
+2.30.1 (Apple Git-130)
+
