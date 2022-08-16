@@ -6,6 +6,21 @@ This module is intended for use with ``find_package`` and should not be imported
 its own.
 
 It will download and install the poetry package manager.
+
+Usage
++++++
+
+To use this module, make sure you're setting the cmake module path to this
+directory and call
+```
+find_package(Poetry VERSION version)
+```
+
+Output Variables
+++++++++++++++++
+- ``Poetry_EXECUTABLE`` path to the poetry executable
+
+
 #]=======================================================================]
 include(FetchContent)
 string(REPLACE "." "_" "_poetry_archive_version_component" "${Poetry_FIND_VERSION}")
@@ -39,3 +54,4 @@ set(ENV{POETRY_VERSION} ${Poetry_FIND_VERSION})
 execute_process(COMMAND  ${Python_EXECUTABLE} install_poetry.py
 	WORKING_DIRECTORY ${LOCALINSTALL_POETRY_DIR}
 )
+set(Poetry_EXECUTABLE ${LOCALINSTALL_POETRY_DIR}/bin/poetry)
