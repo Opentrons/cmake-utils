@@ -25,8 +25,8 @@ message(STATUS "Downloading poetry install script to: ${LOCALINSTALL_POETRY_DIR}
 message(STATUS "Installing Poetry")
 FetchContent_Declare(
 	POETRY_LOCALINSTALL
-	PREFIX "${LOCALINSTALL_POETRY_DIR}"
-	SOURCE_DIR "${LOCALINSTALL_POETRY_DIR}"
+	PREFIX ${LOCALINSTALL_POETRY_DIR}
+	DOWNLOAD_DIR ${LOCALINSTALL_POETRY_DIR}
 	URL "https://install.python-poetry.org/"
 	DOWNLOAD_NAME "install_poetry.py"
 	DOWNLOAD_NO_EXTRACT True
