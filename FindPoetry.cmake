@@ -19,7 +19,7 @@ else()
 endif()
 
 
-set(LOCALINSTALL_POETRY_DIR "${CMAKE_SOURCE_DIR}/poetry")
+set(LOCALINSTALL_POETRY_DIR "${CMAKE_SOURCE_DIR}/stm32-tools/poetry")
 message(STATUS "Downloading poetry install script to: ${LOCALINSTALL_POETRY_DIR}")
 
 message(STATUS "Installing Poetry")
