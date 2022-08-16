@@ -8,6 +8,7 @@ its own.
 It will download and install the poetry package manager.
 #]=======================================================================]
 include(FetchContent)
+string(REPLACE "." "_" "_poetry_archive_version_component" "${Poetry_FIND_VERSION}")
 
 message(STATUS "Checking for installed Python package")
 set(Python_FIND_UNVERSIONED_NAMES "FIRST")  # Helps find pyenv if installed
@@ -32,6 +33,9 @@ FetchContent_Declare(
 	DOWNLOAD_NO_EXTRACT True
 )
 FetchContent_MakeAvailable(POETRY_LOCALINSTALL)
-execute_process(COMMAND ${Python_EXECUTABLE} install_poetry.py
+
+set(ENV{POETRY_HOME} ${LOCALINSTALL_POETRY_DIR})
+set(ENV{POETRY_VERSION} ${Poetry_FIND_VERSION})
+execute_process(COMMAND  ${Python_EXECUTABLE} install_poetry.py
 	WORKING_DIRECTORY ${LOCALINSTALL_POETRY_DIR}
 )
