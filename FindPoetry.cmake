@@ -54,4 +54,12 @@ set(ENV{POETRY_VERSION} ${Poetry_FIND_VERSION})
 execute_process(COMMAND  ${Python_EXECUTABLE} install_poetry.py
 	WORKING_DIRECTORY ${LOCALINSTALL_POETRY_DIR}
 )
+find_program(
+	Poetry_EXECUTABLE
+	poetry
+	PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/poetry
+	PATH_SUFFIXES bin
+	NO_DEFAULT_PATH
+	REQUIRED
+)
 set(Poetry_EXECUTABLE ${LOCALINSTALL_POETRY_DIR}/bin/poetry)
