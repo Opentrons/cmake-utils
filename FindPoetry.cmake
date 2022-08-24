@@ -6,8 +6,24 @@ This module is intended for use with ``find_package`` and should not be imported
 its own.
 
 It will download and install the poetry package manager.
+
+Usage
++++++
+
+To use this module, make sure you're setting the cmake module path to this
+directory and call
+```
+find_package(Poetry VERSION version)
+```
+
+Output Variables
+++++++++++++++++
+- ``Poetry_EXECUTABLE`` path to the poetry executable
+
+
 #]=======================================================================]
 include(FetchContent)
+string(REPLACE "." "_" "_poetry_archive_version_component" "${Poetry_FIND_VERSION}")
 
 message(STATUS "Checking for installed Python package")
 set(Python_FIND_UNVERSIONED_NAMES "FIRST")  # Helps find pyenv if installed
@@ -19,19 +35,31 @@ else()
 endif()
 
 
-set(LOCALINSTALL_POETRY_DIR "${CMAKE_SOURCE_DIR}/poetry")
+set(LOCALINSTALL_POETRY_DIR "${CMAKE_SOURCE_DIR}/stm32-tools/poetry")
 message(STATUS "Downloading poetry install script to: ${LOCALINSTALL_POETRY_DIR}")
 
 message(STATUS "Installing Poetry")
 FetchContent_Declare(
 	POETRY_LOCALINSTALL
-	PREFIX "${LOCALINSTALL_POETRY_DIR}"
-	SOURCE_DIR "${LOCALINSTALL_POETRY_DIR}"
+	PREFIX ${LOCALINSTALL_POETRY_DIR}
+	DOWNLOAD_DIR ${LOCALINSTALL_POETRY_DIR}
 	URL "https://install.python-poetry.org/"
 	DOWNLOAD_NAME "install_poetry.py"
 	DOWNLOAD_NO_EXTRACT True
 )
 FetchContent_MakeAvailable(POETRY_LOCALINSTALL)
-execute_process(COMMAND ${Python_EXECUTABLE} install_poetry.py
+
+set(ENV{POETRY_HOME} ${LOCALINSTALL_POETRY_DIR})
+set(ENV{POETRY_VERSION} ${Poetry_FIND_VERSION})
+execute_process(COMMAND  ${Python_EXECUTABLE} install_poetry.py
 	WORKING_DIRECTORY ${LOCALINSTALL_POETRY_DIR}
 )
+find_program(
+	Poetry_EXECUTABLE
+	poetry
+	PATHS ${CMAKE_SOURCE_DIR}/stm32-tools/poetry
+	PATH_SUFFIXES bin
+	NO_DEFAULT_PATH
+	REQUIRED
+)
+set(Poetry_EXECUTABLE ${LOCALINSTALL_POETRY_DIR}/bin/poetry)
