@@ -18,26 +18,32 @@ Provides the variables
 #]=======================================================================]
 
 include(FetchContent)
-set(GCC_CROSS_DIR "${CMAKE_CURRENT_LIST_DIR}/../stm32-tools/gcc-arm-embedded")
-set(GCC_CROSS_VERSION "10-2020-q4-major" CACHE STRING "GCC compiler version")
+
+set(GCC_CROSS_VERSION "11.3.1-1.1" CACHE STRING "GCC compiler version")
+set(GCC_CROSS_DIR "${CMAKE_SOURCE_DIR}/stm32-tools/gcc-arm-embedded")
 set(GCC_CROSS_TRIPLE "arm-none-eabi")
 
 if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-  set(GCC_ARCHIVE_EXTENSION "x86_64-linux.tar.bz2")
+  set(GCC_ARCHIVE_EXTENSION "linux-x64.tar.gz")
 elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
-  set(GCC_ARCHIVE_EXTENSION "mac.tar.bz2")
+  if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "arm64")
+    set(GCC_ARCHIVE_EXTENSION "darwin-arm64.tar.gz")
+  else()
+    set(GCC_ARCHIVE_EXTENSION "darwin-x64.tar.gz")
+  endif()
 else()
-  set(GCC_ARCHIVE_EXTENSION "win32.zip")
+  set(GCC_ARCHIVE_EXTENSION "win32-x64.zip")
 endif()
 
-set(GCC_ARCHIVE "gcc-arm-none-eabi-${GCC_CROSS_VERSION}-${GCC_ARCHIVE_EXTENSION}")
+set(GCC_ARCHIVE "xpack-arm-none-eabi-gcc-${GCC_CROSS_VERSION}-${GCC_ARCHIVE_EXTENSION}")
+set(GCC_URL "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download")
 
 FetchContent_Declare(
   GCC_ARM_EMBEDDED
   PREFIX ${GCC_CROSS_DIR}
   SOURCE_DIR "${GCC_CROSS_DIR}/${CMAKE_HOST_SYSTEM_NAME}"
   DOWNLOAD_DIR "${GCC_CROSS_DIR}/${CMAKE_HOST_SYSTEM_NAME}"
-  URL "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${GCC_ARCHIVE}"
+  URL "${GCC_URL}/v${GCC_CROSS_VERSION}/${GCC_ARCHIVE}"
 )
 
 macro(FIND_CROSS_GCC REQUIRED)
