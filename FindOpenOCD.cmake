@@ -19,13 +19,17 @@ built into openocd live
 
 include(FetchContent)
 
-set(OPENOCD_VERSION "0.11.0-1")
+set(OPENOCD_VERSION "0.12.0-1")
 set(OPENOCD_DIR "${CMAKE_SOURCE_DIR}/stm32-tools/openocd")
 
 if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
   set(OPENOCD_ARCHIVE_EXTENSION "linux-x64.tar.gz")
 elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
-  set(OPENOCD_ARCHIVE_EXTENSION "darwin-x64.tar.gz")
+  if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "arm64")
+    set(OPENOCD_ARCHIVE_EXTENSION "darwin-arm64.tar.gz")
+  else()
+    set(OPENOCD_ARCHIVE_EXTENSION "darwin-x64.tar.gz")
+  endif()
 else()
   set(OPENOCD_ARCHIVE_EXTENSION "win32-x64.zip")
 endif()
